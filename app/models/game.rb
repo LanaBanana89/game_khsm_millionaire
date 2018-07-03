@@ -71,6 +71,10 @@ class Game < ActiveRecord::Base
     game_questions.detect { |q| q.question.level == current_level }
   end
 
+  def previous_game_question
+    game_questions.detect { |q| q.question.level == (current_level - 1) }
+  end
+
   # Метод previous_level возвращает число, равное предыдущему уровню сложности.
   # Обратите внимание, что этот метод возвращает -1 для новой игры.
   def previous_level
