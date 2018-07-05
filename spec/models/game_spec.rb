@@ -93,6 +93,30 @@ RSpec.describe Game, type: :model do
       expect(game_w_questions.status).to eq(:money)
     end
   end
+
+  context 'game methods' do
+    let(:q) { game_w_questions.current_game_question }
+
+    before(:each) do
+      # берем игру и отвечаем правильно на текущий вопрос
+      game_w_questions.answer_current_question!(q.correct_answer_key)
+    end
+
+    it '.previous_level' do
+      expect(game_w_questions.previous_level).to eq(0)
+      expect(game_w_questions.previous_level).to eq(q.level)
+    end
+
+    it '.current_game_question' do
+      # проверяем, что текущий вопрос совпадает со вторым вопросом из массива вопросов game_question
+      expect(game_w_questions.current_game_question).to eq(game_w_questions.game_questions[1])
+
+      # проверяем, что у текущего вопроса уровень стал равным еденице
+      # и стал больше на один от предыдущего вопроса
+      expect(game_w_questions.current_game_question.level).to eq(1)
+      expect(game_w_questions.current_game_question.level).to eq(q.level + 1)
+    end
+  end
 end
 
 
