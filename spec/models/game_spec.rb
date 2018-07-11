@@ -98,23 +98,19 @@ RSpec.describe Game, type: :model do
 
   context 'game methods' do
     before(:each) do
-      # берем игру и отвечаем правильно на текущий вопрос
+      # берем игру с уровнем "5" и отвечаем правильно на текущий вопрос
+      game_w_questions.current_level = 5
       game_w_questions.answer_current_question!(current_question.correct_answer_key)
     end
 
     it '.previous_level' do
-      expect(game_w_questions.previous_level).to eq(0)
-      expect(game_w_questions.previous_level).to eq(current_question.level)
+      # проверяем, что после верно отвеченного вопроса предыдущий уровень игры равен пяти
+      expect(game_w_questions.previous_level).to eq(5)
     end
 
     it '.current_game_question' do
-      # проверяем, что текущий вопрос совпадает со вторым вопросом из массива вопросов game_question
-      expect(game_w_questions.current_game_question).to eq(game_w_questions.game_questions[1])
-
-      # проверяем, что у текущего вопроса уровень стал равным еденице
-      # и стал больше на один от предыдущего вопроса
-      expect(game_w_questions.current_game_question.level).to eq(1)
-      expect(game_w_questions.current_game_question.level).to eq(current_question.level + 1)
+      # проверяем, что текущий вопрос совпадает с седьмым вопросом из массива вопросов game_question
+      expect(game_w_questions.current_game_question).to eq(game_w_questions.game_questions[6])
     end
   end
 
