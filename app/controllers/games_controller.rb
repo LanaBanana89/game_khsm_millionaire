@@ -72,7 +72,7 @@ class GamesController < ApplicationController
     # Заканчиваем игру
     @game.take_money!
 
-    # Отправялем пользователя на профиль с сообщение о выигрыше
+    # Отправялем пользователя на профиль с сообщением о выигрыше
     redirect_to user_path(current_user), flash: {
       warning: I18n.t(
         'controllers.games.game_finished',
