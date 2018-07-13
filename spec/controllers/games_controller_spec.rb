@@ -14,9 +14,10 @@ RSpec.describe GamesController, type: :controller do
     it 'kick from #show' do
       get :show, id: game_w_questions.id
 
-      expect(response.status).not_to eq 200
+      # код ответа 302 - перенаправление на другую страницу(т.е. на страницу регистрации)
+      expect(response.status).to eq 302
       expect(response).to redirect_to(new_user_session_path)
-      expect(flash[:alert]).to be
+      expect(flash[:alert]).to eq("Вам необходимо войти в систему или зарегистрироваться.")
     end
 
     it 'kick from #create' do
@@ -27,7 +28,7 @@ RSpec.describe GamesController, type: :controller do
       expect(game).to be_nil
 
       expect(response).to redirect_to(new_user_session_path)
-      expect(flash[:alert]).to be
+      expect(flash[:alert]).to eq("Вам необходимо войти в систему или зарегистрироваться.")
     end
 
     it 'kick from #answer' do
@@ -35,9 +36,10 @@ RSpec.describe GamesController, type: :controller do
 
       game = assigns(:game)
 
-      expect(response.status).not_to eq 200
+      # код ответа 302 - перенаправление на другую страницу(т.е. на страницу регистрации)
+      expect(response.status).to eq 302
       expect(response).to redirect_to(new_user_session_path)
-      expect(flash[:alert]).to be
+      expect(flash[:alert]).to eq("Вам необходимо войти в систему или зарегистрироваться.")
     end
 
     it 'kick from #take_money' do
@@ -46,9 +48,10 @@ RSpec.describe GamesController, type: :controller do
       put :take_money, id: game_w_questions.id
       game = assigns(:game)
 
-      expect(response.status).not_to eq 200
+      # код ответа 302 - перенаправление на другую страницу(т.е. на страницу регистрации)
+      expect(response.status).to eq 302
       expect(response).to redirect_to(new_user_session_path)
-      expect(flash[:alert]).to be
+      expect(flash[:alert]).to eq("Вам необходимо войти в систему или зарегистрироваться.")
     end
   end
 
@@ -110,14 +113,25 @@ RSpec.describe GamesController, type: :controller do
 
     it 'wrong answer' do
       answers = ['a', 'b', 'c', 'd']
-      answers.delete(game_w_questions.current_game_question.correct_answer_key)
+      answers.delete('d')
       put :answer, id: game_w_questions.id, letter: answers.sample
 
       game = assigns(:game)
 
-      expect(game.finished?).to be_truthy
+      # проверяем, что в @game находится текущая наша игра game_w_questions
+      expect(game).to eq(game_w_questions)
+
+      # проверям статус игры
+      expect(game.status).to eq(:fail)
+
+      # код ответа 302 - перенаправление на другую страницу(т.е. на страницу регистрации)
+      expect(response.status).to eq(302)
+
+      # проверяем, что приложение перенаправляет пользователя на его профиль
       expect(response).to redirect_to(user_path(user))
-      expect(flash[:alert]).to be
+
+      # проверям текст сообщения с правильным ответом
+      expect(flash[:alert]).to eq("Правильный ответ: #{game_w_questions.current_game_question.correct_answer}. Игра закончена, ваш приз #{game_w_questions.prize} ₽")
     end
 
     # юзер берет деньги
@@ -152,6 +166,12 @@ RSpec.describe GamesController, type: :controller do
       # и редирект на страницу старой игры
       expect(response).to redirect_to(game_path(game_w_questions))
       expect(flash[:alert]).to be
+    end
+
+    # тест на обработку помощи зала
+    it 'uses audience help' do
+      expect(game_w_questions.current_game_question.help_hash[:audience_help]).not_to be
+      expect(game_w_questions.audience_help_used).to be_falsey
     end
   end
 end
