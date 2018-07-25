@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
   resources :games, only: [:create, :show] do
     put 'answer', on: :member # доп. метод ресурса - ответ на текущий вопро
+    put 'help', on: :member
     put 'take_money', on: :member # доп. метод ресурса - игрок берет деньги
   end
 
