@@ -12,6 +12,11 @@ gem 'twitter-bootstrap-rails'
 gem 'font-awesome-rails'
 gem 'russian'
 
+group :test do
+  gem 'capybara'
+  gem 'launchy'
+end
+
 group :development, :test do
   gem 'sqlite3'
   gem 'byebug'
