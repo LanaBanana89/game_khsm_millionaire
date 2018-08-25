@@ -8,3 +8,5 @@
 © http://goodprogrammer.ru
 
 В данном приложении было реализовано rspec тестирование с помощью гемов Copybara и FactoryGirl
+
+https://github.com/LanaBanana89/game_khsm_millionaire/blob/master/app/assets/images/khsm.png
